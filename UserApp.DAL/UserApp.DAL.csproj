@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\UserApp.Common\UserApp.Common.csproj" />
+      <ProjectReference Include="..\UserApp.Models\UserApp.Models.csproj" />
+    </ItemGroup>
+
+</Project>
