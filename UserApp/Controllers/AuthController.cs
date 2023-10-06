@@ -4,6 +4,8 @@ using UserApp.Common.DTOs;
 
 namespace UserApp.Controllers;
 
+[Route("api/[controller]")]
+[ApiController]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -15,7 +17,7 @@ public class AuthController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost("/auth/login")]
+    [HttpPost("/login")]
     public IActionResult Login(UserAuthDto userAuthDto)
     {
         try
@@ -39,7 +41,7 @@ public class AuthController : ControllerBase
         }
     }
 
-    [HttpPost("/auth/register")]
+    [HttpPost("/register")]
     public IActionResult Register(UserCreateDto userCreateDto)
     {
         try

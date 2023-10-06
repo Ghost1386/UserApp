@@ -14,5 +14,5 @@ public class User
     
     public byte[]? PasswordSalt { get; set; }
 
-    public List<Role>? Roles { get; set; }
+    public List<Role>? Roles { get; set; } = new();
 }

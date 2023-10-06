@@ -6,7 +6,7 @@ namespace UserApp.BusinessLogic.Interfaces;
 
 public interface IUserService
 {
-    Task<List<UserGetDto>> GetAll(Identifier identifier);
+    List<UserGetDto> GetAll(UserSortDto userSortDto);
 
     Task<UserGetDto> Get(Identifier identifier);
 

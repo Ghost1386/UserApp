@@ -1,6 +1,4 @@
-﻿using UserApp.Common.Enums;
-
-namespace UserApp.Common.DTOs;
+﻿namespace UserApp.Common.DTOs;
 
 public class UserGetDto
 {
@@ -12,5 +10,5 @@ public class UserGetDto
     
     public string? Email { get; set; }
 
-    public List<string>? Roles { get; set; }
+    public IEnumerable<string>? Roles { get; set; }
 }

@@ -18,12 +18,12 @@ public class UserController : ControllerBase
         _userService = userService;
     }
     
-    [HttpGet("/user/getAll")]
-    public async Task<IActionResult> GetAll([FromQuery]Identifier identifier)
+    [HttpGet("/getAll")]
+    public IActionResult GetAll([FromQuery]UserSortDto userSortDto)
     {
         try
         {
-            var users = await _userService.GetAll(identifier);
+            var users = _userService.GetAll(userSortDto);
 
             return StatusCode(200, users);
         }
@@ -35,7 +35,7 @@ public class UserController : ControllerBase
         }
     }
     
-    [HttpGet("/user/get")]
+    [HttpGet("/get")]
     public async Task<IActionResult> Get([FromQuery]Identifier identifier)
     {
         try
@@ -52,7 +52,7 @@ public class UserController : ControllerBase
         }
     }
     
-    [HttpPut("/user/addRole")]
+    [HttpPut("/addRole")]
     public IActionResult AddRole(Identifier identifier, RoleEnum roleEnum)
     {
         try
@@ -71,7 +71,7 @@ public class UserController : ControllerBase
         }
     }
     
-    [HttpPost("/user/create")]
+    [HttpPost("/create")]
     public IActionResult Create(UserCreateDto userCreateDto)
     {
         try
@@ -95,7 +95,7 @@ public class UserController : ControllerBase
         }
     }
     
-    [HttpPut("/user/update")]
+    [HttpPut("/update")]
     public IActionResult Update(UserUpdateDto userUpdateDto)
     {
         try
@@ -114,7 +114,7 @@ public class UserController : ControllerBase
         }
     }
     
-    [HttpDelete("/user/delete")]
+    [HttpDelete("/delete")]
     public IActionResult Delete(Identifier identifier)
     {
         try

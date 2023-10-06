@@ -11,8 +11,8 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly IRoleRepository _roleRepository;
     private readonly IHashService _hashService;
-
-    private const int NumberUsersForPage = 1;
+    
+    private const int NumberUsersForPage = 3;
 
     public UserService(IUserRepository userRepository, IRoleRepository roleRepository, 
         IHashService hashService)
@@ -22,26 +22,96 @@ public class UserService : IUserService
         _hashService = hashService;
     }
 
-    public async Task<List<UserGetDto>> GetAll(Identifier identifier)
+    public List<UserGetDto> GetAll(UserSortDto userSortDto)
     {
-        var users = await _userRepository.GetAll();
+        var users = _userRepository.GetAll();
 
-        var listUserGetDto = users.Select(user => new UserGetDto
+        var filteringUsers = FilteringUsers(userSortDto, users);
+
+        var filteringAndSortingUsers = SortingUsers(userSortDto, filteringUsers);
+        
+        filteringAndSortingUsers.Skip((userSortDto.Page - 1) * NumberUsersForPage)
+            .Take(NumberUsersForPage);
+        
+        var listUserGetDto = filteringAndSortingUsers.Select(user => new UserGetDto
         {
             Id = user.Id,
             Name = user.Name,
             Age = user.Age,
             Email = user.Email,
             Roles = user.Roles
-                .Select(role => ((RoleEnum)role.RoleEnum).ToString())
-                .ToList()
+                .Select(role => ((RoleEnum)role.RoleEnum)
+                .ToString())
         }).ToList();
 
-        var usersForPage = listUserGetDto.Skip((identifier.Id - 1) * NumberUsersForPage)
-            .Take(NumberUsersForPage)
-            .ToList();
+        return listUserGetDto;
+    }
+    
+    private IEnumerable<User> SortingUsers(UserSortDto userSortDto, IEnumerable<User> users)
+    {
+        switch (userSortDto.SortEnum)
+        {
+            case SortEnum.NameDesc:
+                users = users.OrderByDescending(u => u.Name);
+                break;
+            
+            case SortEnum.AgeAsc:
+                users = users.OrderBy(u => u.Age);
+                break;
+            
+            case SortEnum.AgeDesc:
+                users = users.OrderByDescending(u => u.Age);
+                break;
+            
+            case SortEnum.EmailAsc:
+                users = users.OrderBy(u => u.Email);
+                break;
+            
+            case SortEnum.EmailDesc:
+                users = users.OrderByDescending(u => u.Email);
+                break;
+            
+            case SortEnum.RoleAsc:
+                users = users.OrderBy(u => u.Roles);
+                break;
+            
+            case SortEnum.RoleDesc:
+                users = users.OrderByDescending(u => u.Roles);
+                break;
+            
+            default:
+                users = users.OrderBy(u => u.Name);
+                break;
+        }
+        
+        return users;
+    }
 
-        return usersForPage;
+    private IEnumerable<User> FilteringUsers(UserSortDto userSortDto, IEnumerable<User> users)
+    {
+        if (!string.IsNullOrEmpty(userSortDto.Name))
+        {
+            users = users.Where(u => u.Name.Contains(userSortDto.Name));
+        }
+        
+        if (userSortDto.Age != 0)
+        {
+            users = users.Where(u => u.Age == userSortDto.Age);
+        }
+        
+        if (!string.IsNullOrEmpty(userSortDto.Email))
+        {
+            users = users.Where(u => u.Email.Contains(userSortDto.Email));
+        }
+
+        if (userSortDto.RoleEnum != null)
+        {
+            users = users.Where(u => u.Roles
+                .Select(r => r.RoleEnum == (int)userSortDto.RoleEnum)
+                .FirstOrDefault());
+        }
+
+        return users;
     }
 
     public async Task<UserGetDto> Get(Identifier identifier)
@@ -55,8 +125,8 @@ public class UserService : IUserService
             Age = user.Age,
             Email = user.Email,
             Roles = user.Roles
-                .Select(role => ((RoleEnum)role.RoleEnum).ToString())
-                .ToList()
+                .Select(role => ((RoleEnum)role.RoleEnum)
+                    .ToString())
         };
 
         return userGetDto;

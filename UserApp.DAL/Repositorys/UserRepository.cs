@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UserApp.Common.DTOs;
+using UserApp.Common.Enums;
 using UserApp.DAL.Interfaces;
 using UserApp.Models;
 using UserApp.Models.Models;
@@ -15,11 +16,9 @@ public class UserRepository : IUserRepository
         _applicationContext = applicationContext;
     }
     
-    public async Task<List<User>> GetAll()
+    public IEnumerable<User> GetAll()
     {
-        var users = await _applicationContext.Users
-            .Include(u => u.Roles)
-            .ToListAsync();
+        var users = _applicationContext.Users.Include(u => u.Roles);
 
         return users;
     }

@@ -5,7 +5,7 @@ namespace UserApp.DAL.Interfaces;
 
 public interface IUserRepository
 {
-    Task<List<User>> GetAll();
+    IEnumerable<User> GetAll();
     
     Task<User> GetWithRoles(Identifier identifier);
     
